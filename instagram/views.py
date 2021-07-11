@@ -5,7 +5,10 @@ from django.contrib.auth.models import User
 from .models import Post, Profile, Follow
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import authentication, permissions
+from django.views.generic import RedirectView
 from .forms import SignUpForm, UpdateUserForm, UpdateUserProfileForm, PostForm, CommentForm
 
 # Create your views here.
@@ -178,3 +181,43 @@ def unfollow(request, to_unfollow):
 
 
 # Rest framework functions
+
+class PostLikeToggle(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        id = self.kwargs.get('id')
+        print(id)
+        obj = get_object_or_404(Post, pk=id)
+        url_ = obj.get_absolute_url()
+        user = self.request.user
+        if user in obj.likes.all():
+            obj.likes.remove(user)
+        else:
+            obj.likes.add(user)
+        return url_
+
+
+class PostLikeAPIToggle(APIView):
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, id=None, format=None):
+        # id = self.kwargs.get('id')
+        obj = get_object_or_404(Post, pk=id)
+        url_ = obj.get_absolute_url()
+        user = self.request.user
+        updated = False
+        liked = False
+        if user in obj.likes.all():
+            liked = False
+            obj.likes.remove(user)
+        else:
+            liked = True
+            obj.likes.add(user)
+        updated = True
+        data = {
+
+            'updated': updated,
+            'liked': liked,
+        }
+        print(data)
+        return Response(data)
