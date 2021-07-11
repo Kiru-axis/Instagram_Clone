@@ -159,3 +159,9 @@ def search_profile(request):
     return render(request, 'instagram/results.html', {'message': message})
 
 # follow
+def follow(request, to_follow):
+    if request.method == 'GET':
+        user_profile3 = Profile.objects.get(pk=to_follow)
+        follow_s = Follow(follower=request.user.profile, followed=user_profile3)
+        follow_s.save()
+        return redirect('user_profile', user_profile3.user.username)
