@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from .models import Post, Profile, Follow
 from django.http import HttpResponseRedirect, JsonResponse
 
-from .forms import SignUpForm
+from .forms import SignUpForm, UpdateUserForm, UpdateUserProfileForm, PostForm, CommentForm
 
 # Create your views here.
 
@@ -25,3 +25,23 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 # main view function
+@login_required(login_url='login')
+def index(request):
+    images = Post.objects.all()
+    users = User.objects.exclude(id=request.user.id)
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user = request.user.profile
+            post.save()
+            return HttpResponseRedirect(request.path_info)
+    else:
+        form = PostForm()
+    params = {
+        'images': images,
+        'form': form,
+        'users': users,
+
+    }
+    return render(request, 'instagram/index.html', params)
