@@ -71,7 +71,15 @@ class Comment(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
     created = models.DateTimeField(auto_now_add=True, null=True)
 
+    def __str__(self):
+        return f'{self.user.name} Post'
+
+    class Meta:
+        ordering = ["-pk"]
+
 class Follow(models.Model):
     follower = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='following')
     followed = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='followers')
 
+    def __str__(self):
+        return f'{self.follower} Follow'
