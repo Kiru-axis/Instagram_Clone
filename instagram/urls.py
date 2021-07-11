@@ -5,7 +5,6 @@ from . import views
 from instagram.views import PostLikeToggle, PostLikeAPIToggle
 
 
-
 urlpatterns = [
     path('', views.index, name='index'),
     path('profile/<username>/', views.profile, name='profile'),
