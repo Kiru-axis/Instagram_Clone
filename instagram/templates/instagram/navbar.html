@@ -1,0 +1,57 @@
+
+  <!--Navbar blue-->
+  <nav class="navbar navbar-expand-lg navbar-light bg-dark primary-color">
+    <span class="navbar-brand mb-0 h1">
+        <a href="/">
+            <div id="brand" class="instaicon logo d-none d-sm-block"></div>
+            <div class="instaicon mainicon d-block d-sm-none"></div>
+        </a>
+    </span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link waves-effect waves-light" href="/"> <i class="fa fa-home" aria-hidden="true"></i>Home
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link waves-effect waves-light" href="#"><i class="fa fa-eye" ></i>Explore</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect waves-light" href="#"><i class="fa fa-bell-o"></i>Notifications</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect waves-light" href="#"><i class="fa fa-inbox" ></i>Inbox</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect waves-light" href="{% url 'profile' user.username %}"><i class="fa fa-user" ></i>Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect waves-light" href="#"></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs" aria-hidden="true"></i>Settings
+          </a>
+          <div class="dropdown-menu dropdown-primary" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item waves-effect waves-light" href="#">Change password</a>
+            <a class="dropdown-item waves-effect waves-light" href="#">Contact</a>
+            <a class="dropdown-item waves-effect waves-light" href="#">Report abuse</a>
+            <a class="dropdown-item waves-effect waves-light" href="{% url 'logout' %}">Logout</a>
+
+          </div>
+        </li>
+      </ul>
+      <form class="mb-0 h1 ml-auto mr-auto" id="searchform" action="{% url 'search' %}" >
+        <div class="md-form my-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+        </div>
+      </form>
+    </div>
+  </nav>
+  <!--/.Navbar blue-->
+
+ 
