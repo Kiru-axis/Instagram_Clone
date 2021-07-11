@@ -5,7 +5,18 @@ from . import views
 
 
 urlpatterns = [
+    path('', views.index, name='index'),
+    path('profile/<username>/', views.profile, name='profile'),
+    path('user_profile/<username>/', views.user_profile, name='user_profile'),
     path('signup/', views.signup, name='signup'),
+    path('search/', views.search_profile, name='search'),
+  
+    path('account/', include('django.contrib.auth.urls')),
+    path('like', views.like_post, name='like_post'),
+    path('post/<id>', views.post_comment, name='comment'),
+    path('follow/<to_follow>', views.follow, name='follow'),
+    path('unfollow/<to_unfollow>', views.unfollow, name='unfollow'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
