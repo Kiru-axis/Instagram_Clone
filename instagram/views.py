@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from .models import Post, Profile, Follow
+from django.http import HttpResponseRedirect, JsonResponse
 
 from .forms import SignUpForm
 
@@ -20,3 +24,4 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'registration/signup.html', {'form': form})
 
+# main view function
