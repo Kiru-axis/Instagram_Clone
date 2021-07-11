@@ -1,90 +1,42 @@
-from django.db import models
+from django.test import TestCase
+
+from .models import Profile, Post
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 
-# Create your tests here.
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    profile_picture = models.ImageField(upload_to='images/', default='default.png')
-    bio = models.TextField(max_length=500, default="My Bio", blank=True)
-    name = models.CharField(blank=True, max_length=120)
-    location = models.CharField(max_length=60, blank=True)
+class TestProfile(TestCase):
+    def setUp(self):
+        self.user = User(username='charles')
+        self.user.save()
 
-    def __str__(self):
-        return f'{self.user.username} Profile'
+        self.profile_test = Profile(id=1, name='image', profile_picture='default.jpg', bio='this is a test profile',
+                                    user=self.user)
 
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Profile.objects.create(user=instance)
+    def test_instance(self):
+        self.assertTrue(isinstance(self.profile_test, Profile))
 
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.profile.save()
-
-    def save_profile(self):
-        self.user
-
-    def delete_profile(self):
-        self.delete()
-
-    @classmethod
-    def search_profile(cls, name):
-        return cls.objects.filter(user__username__icontains=name).all()
+    def test_save_profile(self):
+        self.profile_test.save_profile()
+        after = Profile.objects.all()
+        self.assertTrue(len(after) > 0)
 
 
-class Post(models.Model):
-    image = models.ImageField(upload_to='posts/')
-    name = models.CharField(max_length=250, blank=True)
-    caption = models.CharField(max_length=250, blank=True)
-    likes = models.ManyToManyField(User, related_name='likes', blank=True, )
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='posts')
-    created = models.DateTimeField(auto_now_add=True, null=True)
+class TestPost(TestCase):
+    def setUp(self):
+        self.profile_test = Profile(name='charles', user=User(username='mikey'))
+        self.profile_test.save()
 
-    class Meta:
-        ordering = ["-pk"]
+        self.image_test = Post(image='default.png', name='test', caption='default test', user=self.profile_test)
 
-    def get_absolute_url(self):
-        return f"/post/{self.id}"
+    def test_insatance(self):
+        self.assertTrue(isinstance(self.image_test, Post))
 
-    @property
-    def get_all_comments(self):
-        return self.comments.all()
+    def test_save_image(self):
+        self.image_test.save_image()
+        images = Post.objects.all()
+        self.assertTrue(len(images) > 0)
 
-    def save_image(self):
-        self.save()
-
-    def delete_image(self):
-        self.delete()
-
-    def total_likes(self):
-        return self.likes.count()
-
-    def __str__(self):
-        return f'{self.user.name} Post'
-
-
-class Comment(models.Model):
-    comment = models.TextField()
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
-    created = models.DateTimeField(auto_now_add=True, null=True)
-
-    def __str__(self):
-        return f'{self.user.name} Post'
-
-    class Meta:
-        ordering = ["-pk"]
-
-
-class Follow(models.Model):
-    follower = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='following')
-    followed = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='followers')
-
-    def __str__(self):
-        return f'{self.follower} Follow'
-class InstagramRecipients(models.Model):
-    username = models.CharField(max_length = 30)
-    email = models.EmailField()
+    def test_delete_image(self):
+        self.image_test.delete_image()
+        after = Profile.objects.all()
+        self.assertTrue(len(after) < 1)
