@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Post, Profile, Follow
 from django.http import HttpResponseRedirect, JsonResponse
+from django.template.loader import render_to_string
 
 from .forms import SignUpForm, UpdateUserForm, UpdateUserProfileForm, PostForm, CommentForm
 
@@ -116,3 +117,45 @@ def post_comment(request, id):
         'total_likes': image.total_likes()
     }
     return render(request, 'instagram/single_post.html', params)
+
+# like posts
+# boolean fields
+def like_post(request):
+    # image = get_object_or_404(Post, id=request.POST.get('image_id'))
+    image = get_object_or_404(Post, id=request.POST.get('id'))
+    is_liked = False
+    if image.likes.filter(id=request.user.id).exists():
+        image.likes.remove(request.user)
+        is_liked = False
+    else:
+        image.likes.add(request.user)
+        is_liked = False
+
+    params = {
+        'image': image,
+        'is_liked': is_liked,
+        'total_likes': image.total_likes()
+    }
+    if request.is_ajax():
+        html = render_to_string('instagram/like_section.html', params, request=request)
+        return JsonResponse({'form': html})
+
+
+# search function
+@login_required(login_url='login')
+def search_profile(request):
+    if 'search_user' in request.GET and request.GET['search_user']:
+        name = request.GET.get("search_user")
+        results = Profile.search_profile(name)
+        print(results)
+        message = f'name'
+        params = {
+            'results': results,
+            'message': message
+        }
+        return render(request, 'instagram/results.html', params)
+    else:
+        message = "You haven't searched for any image category"
+    return render(request, 'instagram/results.html', {'message': message})
+
+# follow
