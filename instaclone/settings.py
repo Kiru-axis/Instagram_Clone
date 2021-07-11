@@ -1,3 +1,7 @@
+
+import os
+from decouple import config, Csv
+import dj_database_url
 """
 Django settings for instaclone project.
 
