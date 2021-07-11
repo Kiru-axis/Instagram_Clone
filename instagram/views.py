@@ -174,3 +174,7 @@ def unfollow(request, to_unfollow):
         unfollow_d = Follow.objects.filter(follower=request.user.profile, followed=user_profile2)
         unfollow_d.delete()
         return redirect('user_profile', user_profile2.user.username)
+
+
+
+# Rest framework functions
