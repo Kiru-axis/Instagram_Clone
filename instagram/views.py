@@ -124,7 +124,6 @@ def post_comment(request, id):
 # like posts
 # boolean fields
 def like_post(request):
-    # image = get_object_or_404(Post, id=request.POST.get('image_id'))
     image = get_object_or_404(Post, id=request.POST.get('id'))
     is_liked = False
     if image.likes.filter(id=request.user.id).exists():
