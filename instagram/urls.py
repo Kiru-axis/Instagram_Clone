@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from . import views
 from instagram.views import PostLikeToggle, PostLikeAPIToggle
-
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -18,6 +18,12 @@ urlpatterns = [
     path('unfollow/<to_unfollow>', views.unfollow, name='unfollow'),
     path('post/<id>/like', PostLikeToggle.as_view(), name='liked'),
     path('api/post/<id>/like', PostLikeAPIToggle.as_view(), name='liked-api'),
+    # password reset
+    path('reset_password/', auth_views.PasswordResetView.as_view(), name='reset_password'),
+    path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset_password_complete/', auth_views.PasswordResetCompleteView.as_view(), name='reset_password_complete'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
