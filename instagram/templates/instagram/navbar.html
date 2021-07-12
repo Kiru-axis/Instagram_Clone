@@ -46,9 +46,8 @@
         </li>
       </ul>
       <form class="mb-0 h1 ml-auto mr-auto" id="searchform" action="{% url 'search' %}" >
-        <div class="md-form my-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-        </div>
+        <input name="search_user" autocomplete="off" id="searching" class="form-control d-none d-md-block" placeholder="Search">
+       <i class="spinner "></i>
       </form>
     </div>
   </nav>
